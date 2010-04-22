@@ -13,12 +13,12 @@
 - (void)setupSineWave;
 @end
 
-static OSStatus MyRenderer(void *							inRefCon,
+static OSStatus MyRenderer(void *                           inRefCon,
                            AudioUnitRenderActionFlags *     ioActionFlags,
-                           const AudioTimeStamp *			inTimeStamp,
-                           UInt32							inBusNumber,
-                           UInt32							inNumberFrames,
-                           AudioBufferList *				ioData);
+                           const AudioTimeStamp *           inTimeStamp,
+                           UInt32                           inBusNumber,
+                           UInt32                           inNumberFrames,
+                           AudioBufferList *                ioData);
 
 @implementation A440AUGraph
 
@@ -125,12 +125,12 @@ failed:
     _phaseIncrement = (frequency * 2*M_PI)/_dataFormat.mSampleRate;
 }
 
-static OSStatus MyRenderer(void *							inRefCon,
+static OSStatus MyRenderer(void *                           inRefCon,
                            AudioUnitRenderActionFlags *     ioActionFlags,
-                           const AudioTimeStamp *			inTimeStamp,
-                           UInt32							inBusNumber,
-                           UInt32							inNumberFrames,
-                           AudioBufferList *				ioData)
+                           const AudioTimeStamp *           inTimeStamp,
+                           UInt32                           inBusNumber,
+                           UInt32                           inNumberFrames,
+                           AudioBufferList *                ioData)
 {
     A440AUGraph * self = inRefCon;
     

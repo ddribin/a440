@@ -9,8 +9,8 @@
 
 @interface A440AudioQueue ()
 - (void)setupDataFormat;
-- (UInt32)calculateBufferSizeForSeconds:(Float64)seconds;
 - (OSStatus)allocateBuffers;
+- (UInt32)calculateBufferSizeForSeconds:(Float64)seconds;
 - (void)setupSineWave;
 - (void)primeBuffers;
 @end
@@ -76,12 +76,6 @@ failed:
     _dataFormat.mBytesPerPacket = _dataFormat.mBytesPerFrame * _dataFormat.mFramesPerPacket;
 }
 
-- (UInt32)calculateBufferSizeForSeconds:(Float64)seconds;
-{
-    UInt32 bufferSize = _dataFormat.mSampleRate * _dataFormat.mBytesPerPacket * seconds;
-    return bufferSize;
-}
-
 - (OSStatus)allocateBuffers;
 {
     UInt32 bufferSize = [self calculateBufferSizeForSeconds:0.5];
@@ -97,6 +91,12 @@ failed:
     
 failed:
     return status;
+}
+
+- (UInt32)calculateBufferSizeForSeconds:(Float64)seconds;
+{
+    UInt32 bufferSize = _dataFormat.mSampleRate * _dataFormat.mBytesPerPacket * seconds;
+    return bufferSize;
 }
 
 - (void)setupSineWave;
@@ -128,15 +128,17 @@ static void HandleOutputBuffer(void * inUserData,
     
     UInt32 numberOfFrames = inBuffer->mAudioDataBytesCapacity / self->_dataFormat.mBytesPerFrame;
     int16_t * sample = inBuffer->mAudioData;
+    UInt32 channelsPerFrame = self->_dataFormat.mChannelsPerFrame;
     for (UInt32 i = 0; i < numberOfFrames; i++) {
         int16_t sineValue = 16384.0 * sin(self->_currentPhase);
-        sample[0] = sineValue;
-        sample[1] = sineValue;
+        for (int channel = 0; channel < channelsPerFrame; channel++) {
+            sample[channel] = sineValue;
+        }
         self->_currentPhase += self->_phaseIncrement;
-        sample += 2;
+        sample += channelsPerFrame;
     }
     
-    inBuffer->mAudioDataByteSize = inBuffer->mAudioDataBytesCapacity;
+    inBuffer->mAudioDataByteSize = numberOfFrames * self->_dataFormat.mBytesPerFrame;
     OSStatus result = AudioQueueEnqueueBuffer(self->_queue, inBuffer, 0, NULL);
     if (result != noErr) {
         NSLog(@"AudioQueueEnqueueBuffer error: %d %s %s", result, GetMacOSStatusErrorString(result), GetMacOSStatusCommentString(result));

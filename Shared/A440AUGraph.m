@@ -5,6 +5,10 @@
 #define FAIL_ON_ERR(_X_) if ((status = (_X_)) != noErr) { goto failed; }
 
 @interface A440AUGraph ()
+- (OSStatus)addOutputNode;
+- (OSStatus)addConverterNode;
+- (OSStatus)setDataFormatOfConverterAudioUnit;
+- (OSStatus)setRenderCallbackOfConverterNode;
 - (void)setupDataFormat;
 - (void)setupSineWave;
 @end
@@ -25,38 +29,13 @@ static OSStatus MyRenderer(void *							inRefCon,
     OSStatus status;
     
     FAIL_ON_ERR(NewAUGraph(&_graph));
-    
-    AudioComponentDescription description = {0};
-    description.componentType = kAudioUnitType_Output;
-    description.componentSubType = kAudioUnitSubType_DefaultOutput;
-    description.componentManufacturer = kAudioUnitManufacturer_Apple;
-    FAIL_ON_ERR(AUGraphAddNode(_graph, &description, &_outputNode));
-    
-    description.componentType = kAudioUnitType_FormatConverter;
-    description.componentSubType = kAudioUnitSubType_AUConverter;
-    FAIL_ON_ERR(AUGraphAddNode(_graph, &description, &_converterNode));
-    
+    FAIL_ON_ERR([self addOutputNode]);
+    FAIL_ON_ERR([self addConverterNode]);
     FAIL_ON_ERR(AUGraphConnectNodeInput(_graph, _converterNode, 0, _outputNode, 0));
-    
     FAIL_ON_ERR(AUGraphOpen(_graph));
-
     [self setupDataFormat];
-    AudioUnit converterAudioUnit;
-    FAIL_ON_ERR(AUGraphNodeInfo(_graph, _converterNode, NULL, &converterAudioUnit));
-
-    FAIL_ON_ERR(AudioUnitSetProperty(converterAudioUnit,
-                                     kAudioUnitProperty_StreamFormat,
-                                     kAudioUnitScope_Input,
-                                     0,
-                                     &_dataFormat,
-                                     sizeof(_dataFormat)));
-    
-    AURenderCallbackStruct callback = {
-        .inputProc = MyRenderer,
-        .inputProcRefCon = self,
-    };
-    FAIL_ON_ERR(AUGraphSetNodeInputCallback(_graph, _converterNode, 0, &callback));
-    
+    FAIL_ON_ERR([self setDataFormatOfConverterAudioUnit]);
+    FAIL_ON_ERR([self setRenderCallbackOfConverterNode]);
     FAIL_ON_ERR(AUGraphInitialize(_graph));
     [self setupSineWave];
     FAIL_ON_ERR(AUGraphStart(_graph));
@@ -72,6 +51,24 @@ failed:
         *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
     return NO;
+}
+
+- (OSStatus)addOutputNode;
+{
+    AudioComponentDescription description = {0};
+    description.componentType = kAudioUnitType_Output;
+    description.componentSubType = kAudioUnitSubType_DefaultOutput;
+    description.componentManufacturer = kAudioUnitManufacturer_Apple;
+    return AUGraphAddNode(_graph, &description, &_outputNode);
+}
+
+- (OSStatus)addConverterNode;
+{
+    AudioComponentDescription description = {0};
+    description.componentType = kAudioUnitType_FormatConverter;
+    description.componentSubType = kAudioUnitSubType_AUConverter;
+    description.componentManufacturer = kAudioUnitManufacturer_Apple;
+    return AUGraphAddNode(_graph, &description, &_converterNode);
 }
 
 - (void)setupDataFormat;
@@ -92,6 +89,33 @@ failed:
     _dataFormat.mFramesPerPacket = 1;
     _dataFormat.mBytesPerFrame = _dataFormat.mBitsPerChannel * _dataFormat.mChannelsPerFrame / 8;
     _dataFormat.mBytesPerPacket = _dataFormat.mBytesPerFrame * _dataFormat.mFramesPerPacket;
+}
+
+- (OSStatus)setDataFormatOfConverterAudioUnit;
+{
+    AudioUnit converterAudioUnit;
+    OSStatus status;
+    status = AUGraphNodeInfo(_graph, _converterNode, NULL, &converterAudioUnit);
+    if (status != noErr) {
+        return status;
+    }
+    
+    status = AudioUnitSetProperty(converterAudioUnit,
+                                  kAudioUnitProperty_StreamFormat,
+                                  kAudioUnitScope_Input,
+                                  0,
+                                  &_dataFormat,
+                                  sizeof(_dataFormat));
+    return status;
+}
+
+- (OSStatus)setRenderCallbackOfConverterNode;
+{
+    AURenderCallbackStruct callback = {
+        .inputProc = MyRenderer,
+        .inputProcRefCon = self,
+    };
+    return AUGraphSetNodeInputCallback(_graph, _converterNode, 0, &callback);
 }
 
 - (void)setupSineWave;
@@ -118,7 +142,7 @@ static OSStatus MyRenderer(void *							inRefCon,
             sample[channel] = sineValue;
         }
         self->_currentPhase += self->_phaseIncrement;
-        sample += 2;
+        sample += channelsPerFrame;
     }
     
     ioData->mBuffers[0].mDataByteSize = inNumberFrames*self->_dataFormat.mBytesPerFrame;

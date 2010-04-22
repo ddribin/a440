@@ -83,4 +83,9 @@ Class sRowToClass[2];
     return YES;
 }
 
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)application
+{
+    return YES;
+}
+
 @end

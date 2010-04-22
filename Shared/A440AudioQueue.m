@@ -1,10 +1,4 @@
 //
-//  A440AudioQueue.m
-//  A440
-//
-//  Created by Dave Dribin on 4/21/10.
-//  Copyright 2010 Bit Maki, Inc. All rights reserved.
-//
 
 #import "A440AudioQueue.h"
 
@@ -71,6 +65,7 @@ failed:
                           | kAudioFormatFlagsNativeEndian
                           );
     
+    memset(&_dataFormat, 0, sizeof(_dataFormat));
     _dataFormat.mFormatID = kAudioFormatLinearPCM;
     _dataFormat.mSampleRate = 44100.0;
     _dataFormat.mChannelsPerFrame = 2;

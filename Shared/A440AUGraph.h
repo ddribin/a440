@@ -1,19 +1,21 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AudioToolbox/AudioQueue.h>
+#import <AudioUnit/AudioUnit.h>
+#import <AudioToolbox/AudioToolbox.h>
+#import <AudioUnit/AudioUnit.h>
 #import "A440Player.h"
 
 
-@interface A440AudioQueue : NSObject <A440Player>
+@interface A440AUGraph : NSObject <A440Player>
 {
-    AudioQueueRef _queue;
+    AUGraph _graph;
+    AUNode _outputNode;
+    AUNode _converterNode;
     AudioStreamBasicDescription _dataFormat;
-    AudioQueueBufferRef _buffers[3];
     
     double _currentPhase;
     double _phaseIncrement;
-    BOOL _shouldBufferDataInCallback;
 }
 
 - (BOOL)start:(NSError **)error;

@@ -1,23 +1,20 @@
 //
-//  A440AppDelegate.h
-//  A440
-//
-//  Created by Dave Dribin on 4/21/10.
-//  Copyright 2010 Bit Maki, Inc. All rights reserved.
-//
 
 #import <Cocoa/Cocoa.h>
 
-@class A440AudioQueue;
+@protocol A440Player;
+
 
 @interface A440AppDelegate : NSObject <NSApplicationDelegate> {
     NSWindow * _window;
     NSButton * _startStopButton;
-    A440AudioQueue * _a440AudioQueue;
+    NSMatrix * _playerTypeMatrix;
+    id<A440Player> _player;
 }
 
 @property (assign) IBOutlet NSWindow * window;
 @property (assign) IBOutlet NSButton * startStopButton;
+@property (assign) IBOutlet NSMatrix * playerTypeMatrix;
 
 - (IBAction)startStop:(id)sender;
 

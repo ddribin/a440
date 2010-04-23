@@ -141,7 +141,7 @@ static void HandleOutputBuffer(void * inUserData,
     inBuffer->mAudioDataByteSize = numberOfFrames * self->_dataFormat.mBytesPerFrame;
     OSStatus result = AudioQueueEnqueueBuffer(self->_queue, inBuffer, 0, NULL);
     if (result != noErr) {
-        NSLog(@"AudioQueueEnqueueBuffer error: %d %s %s", result, GetMacOSStatusErrorString(result), GetMacOSStatusCommentString(result));
+        NSLog(@"AudioQueueEnqueueBuffer error: %d", result);
     }
     
     // Keep the phase between 0 and 2*M_PI

@@ -57,7 +57,11 @@ failed:
 {
     AudioComponentDescription description = {0};
     description.componentType = kAudioUnitType_Output;
+#if TARGET_OS_IPHONE
+    description.componentSubType = kAudioUnitSubType_RemoteIO;
+#else
     description.componentSubType = kAudioUnitSubType_DefaultOutput;
+#endif
     description.componentManufacturer = kAudioUnitManufacturer_Apple;
     return AUGraphAddNode(_graph, &description, &_outputNode);
 }

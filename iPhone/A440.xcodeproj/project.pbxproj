@@ -96,12 +96,12 @@
 			path = iPad;
 			sourceTree = "<group>";
 		};
-		28EEBF621118D79A00187D67 /* Shared iPad and iPhone */ = {
+		28EEBF621118D79A00187D67 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
 				8D1107310486CEB800E47090 /* A440-Info.plist */,
 			);
-			name = "Shared iPad and iPhone";
+			name = Shared;
 			sourceTree = "<group>";
 		};
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
@@ -109,8 +109,8 @@
 			children = (
 				2860E32A111B888700E27156 /* iPad */,
 				2860E324111B887F00E27156 /* iPhone */,
-				28EEBF621118D79A00187D67 /* Shared iPad and iPhone */,
-				55B23F6211801A590076B834 /* Shared */,
+				28EEBF621118D79A00187D67 /* Shared */,
+				55B23F6211801A590076B834 /* SharedModel */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -139,7 +139,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		55B23F6211801A590076B834 /* Shared */ = {
+		55B23F6211801A590076B834 /* SharedModel */ = {
 			isa = PBXGroup;
 			children = (
 				55B23F6311801A590076B834 /* A440AudioQueue.h */,
@@ -148,8 +148,8 @@
 				55B23F6611801A590076B834 /* A440AUGraph.m */,
 				55B23F6711801A590076B834 /* A440Player.h */,
 			);
-			name = Shared;
-			path = ../Shared;
+			name = SharedModel;
+			path = ../SharedModel;
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */

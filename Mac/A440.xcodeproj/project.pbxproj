@@ -93,7 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				080E96DDFE201D6D7F000001 /* Classes */,
-				55B23C33117FF1EF0076B834 /* Shared */,
+				55B23C33117FF1EF0076B834 /* SharedModel */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -132,7 +132,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		55B23C33117FF1EF0076B834 /* Shared */ = {
+		55B23C33117FF1EF0076B834 /* SharedModel */ = {
 			isa = PBXGroup;
 			children = (
 				55B23E4611800E390076B834 /* A440Player.h */,
@@ -141,8 +141,8 @@
 				55B23D6A118005010076B834 /* A440AUGraph.h */,
 				55B23D6B118005010076B834 /* A440AUGraph.m */,
 			);
-			name = Shared;
-			path = ../Shared;
+			name = SharedModel;
+			path = ../SharedModel;
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */

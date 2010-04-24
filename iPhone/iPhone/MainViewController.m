@@ -116,7 +116,7 @@ static Class sRowToClass[2];
 
 #pragma mark - UIPickerView
 
-static NSString * sRowToLabel[2] = {
+static NSString * sRowToLabel[] = {
     @"Audio Queue",
     @"AUGraph",
 };

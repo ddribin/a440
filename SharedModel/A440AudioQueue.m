@@ -11,7 +11,6 @@
 - (void)setupDataFormat;
 - (OSStatus)allocateBuffers;
 - (UInt32)calculateBufferSizeForSeconds:(Float64)seconds;
-- (void)setupSineWave;
 - (void)primeBuffers;
 @end
 
@@ -39,7 +38,7 @@ static void HandleOutputBuffer(void * inUserData,
     FAIL_ON_ERR(AudioQueueNewOutput(&_dataFormat, HandleOutputBuffer, self, CFRunLoopGetCurrent(),
                                     kCFRunLoopCommonModes, 0, &_queue));
     FAIL_ON_ERR([self allocateBuffers]);
-    [self setupSineWave];
+    A440SineWaveGeneratorInitWithFrequency(&_sineWaveGenerator, 440.0);
     [self primeBuffers];
     FAIL_ON_ERR(AudioQueueStart(_queue, NULL));
     return YES;
@@ -67,7 +66,7 @@ failed:
     
     memset(&_dataFormat, 0, sizeof(_dataFormat));
     _dataFormat.mFormatID = kAudioFormatLinearPCM;
-    _dataFormat.mSampleRate = 44100.0;
+    _dataFormat.mSampleRate = SAMPLE_RATE;
     _dataFormat.mChannelsPerFrame = 2;
     _dataFormat.mFormatFlags = formatFlags;
     _dataFormat.mBitsPerChannel = 16;
@@ -99,13 +98,6 @@ failed:
     return bufferSize;
 }
 
-- (void)setupSineWave;
-{
-    _currentPhase = 0.0;
-    double frequency = 440.0;
-    _phaseIncrement = (frequency * 2*M_PI)/_dataFormat.mSampleRate;
-}
-
 - (void)primeBuffers;
 {
     _shouldBufferDataInCallback = YES;
@@ -130,11 +122,11 @@ static void HandleOutputBuffer(void * inUserData,
     int16_t * sample = inBuffer->mAudioData;
     UInt32 channelsPerFrame = self->_dataFormat.mChannelsPerFrame;
     for (UInt32 i = 0; i < numberOfFrames; i++) {
-        int16_t sineValue = 16384.0 * sin(self->_currentPhase);
+        // Divide by four to keep the volume away from the max
+        int16_t sampleValue = A440SineWaveGeneratorNextSample(&self->_sineWaveGenerator) / 4;
         for (int channel = 0; channel < channelsPerFrame; channel++) {
-            sample[channel] = sineValue;
+            sample[channel] = sampleValue;
         }
-        self->_currentPhase += self->_phaseIncrement;
         sample += channelsPerFrame;
     }
     
@@ -142,11 +134,6 @@ static void HandleOutputBuffer(void * inUserData,
     OSStatus result = AudioQueueEnqueueBuffer(self->_queue, inBuffer, 0, NULL);
     if (result != noErr) {
         NSLog(@"AudioQueueEnqueueBuffer error: %d", result);
-    }
-    
-    // Keep the phase between 0 and 2*M_PI
-    while (self->_currentPhase > 2*M_PI) {
-        self->_currentPhase -= 2*M_PI;
     }
 }
 

@@ -5,6 +5,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <AudioUnit/AudioUnit.h>
 #import "A440Player.h"
+#import "A440SineWaveGenerator.h"
 
 
 @interface A440AUGraph : NSObject <A440Player>
@@ -14,8 +15,7 @@
     AUNode _converterNode;
     AudioStreamBasicDescription _dataFormat;
     
-    double _currentPhase;
-    double _phaseIncrement;
+    A440SineWaveGenerator _sineWaveGenerator;
 }
 
 - (BOOL)start:(NSError **)error;

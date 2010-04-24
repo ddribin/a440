@@ -3,6 +3,7 @@
 #import <Foundation/Foundation.h>
 #import <AudioToolbox/AudioQueue.h>
 #import "A440Player.h"
+#import "A440SineWaveGenerator.h"
 
 
 @interface A440AudioQueue : NSObject <A440Player>
@@ -11,8 +12,7 @@
     AudioStreamBasicDescription _dataFormat;
     AudioQueueBufferRef _buffers[3];
     
-    double _currentPhase;
-    double _phaseIncrement;
+    A440SineWaveGenerator _sineWaveGenerator;
     BOOL _shouldBufferDataInCallback;
 }
 

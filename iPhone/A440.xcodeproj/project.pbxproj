@@ -21,6 +21,7 @@
 		55B23F8011801B0B0076B834 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B23F7011801AE40076B834 /* AudioToolbox.framework */; };
 		55B2403811813BC90076B834 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B2403611813BC90076B834 /* MainViewController.m */; };
 		55B2403911813BC90076B834 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55B2403711813BC90076B834 /* MainViewController.xib */; };
+		55E57A811182AA44002B41E4 /* A440SineWaveGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = 55E57A7F1182AA44002B41E4 /* A440SineWaveGenerator.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,8 @@
 		55B2403511813BC90076B834 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		55B2403611813BC90076B834 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		55B2403711813BC90076B834 /* MainViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
+		55E57A7F1182AA44002B41E4 /* A440SineWaveGenerator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = A440SineWaveGenerator.c; sourceTree = "<group>"; };
+		55E57A801182AA44002B41E4 /* A440SineWaveGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A440SineWaveGenerator.h; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* A440-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "A440-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -142,11 +145,13 @@
 		55B23F6211801A590076B834 /* SharedModel */ = {
 			isa = PBXGroup;
 			children = (
+				55B23F6711801A590076B834 /* A440Player.h */,
 				55B23F6311801A590076B834 /* A440AudioQueue.h */,
 				55B23F6411801A590076B834 /* A440AudioQueue.m */,
 				55B23F6511801A590076B834 /* A440AUGraph.h */,
 				55B23F6611801A590076B834 /* A440AUGraph.m */,
-				55B23F6711801A590076B834 /* A440Player.h */,
+				55E57A801182AA44002B41E4 /* A440SineWaveGenerator.h */,
+				55E57A7F1182AA44002B41E4 /* A440SineWaveGenerator.c */,
 			);
 			name = SharedModel;
 			path = ../SharedModel;
@@ -213,6 +218,7 @@
 				55B23F6811801A590076B834 /* A440AudioQueue.m in Sources */,
 				55B23F6911801A590076B834 /* A440AUGraph.m in Sources */,
 				55B2403811813BC90076B834 /* MainViewController.m in Sources */,
+				55E57A811182AA44002B41E4 /* A440SineWaveGenerator.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

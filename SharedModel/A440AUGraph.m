@@ -10,7 +10,6 @@
 - (OSStatus)setDataFormatOfConverterAudioUnit;
 - (OSStatus)setRenderCallbackOfConverterNode;
 - (void)setupDataFormat;
-- (void)setupSineWave;
 @end
 
 static OSStatus MyRenderer(void *                           inRefCon,
@@ -37,7 +36,7 @@ static OSStatus MyRenderer(void *                           inRefCon,
     FAIL_ON_ERR([self setDataFormatOfConverterAudioUnit]);
     FAIL_ON_ERR([self setRenderCallbackOfConverterNode]);
     FAIL_ON_ERR(AUGraphInitialize(_graph));
-    [self setupSineWave];
+    A440SineWaveGeneratorInitWithFrequency(&_sineWaveGenerator, 440.0);
     FAIL_ON_ERR(AUGraphStart(_graph));
     
     return YES;
@@ -86,7 +85,7 @@ failed:
     
     memset(&_dataFormat, 0, sizeof(_dataFormat));
     _dataFormat.mFormatID = kAudioFormatLinearPCM;
-    _dataFormat.mSampleRate = 44100.0;
+    _dataFormat.mSampleRate = SAMPLE_RATE;
     _dataFormat.mChannelsPerFrame = 2;
     _dataFormat.mFormatFlags = formatFlags;
     _dataFormat.mBitsPerChannel = 16;
@@ -122,13 +121,6 @@ failed:
     return AUGraphSetNodeInputCallback(_graph, _converterNode, 0, &callback);
 }
 
-- (void)setupSineWave;
-{
-    _currentPhase = 0.0;
-    double frequency = 440.0;
-    _phaseIncrement = (frequency * 2*M_PI)/_dataFormat.mSampleRate;
-}
-
 static OSStatus MyRenderer(void *                           inRefCon,
                            AudioUnitRenderActionFlags *     ioActionFlags,
                            const AudioTimeStamp *           inTimeStamp,
@@ -141,21 +133,16 @@ static OSStatus MyRenderer(void *                           inRefCon,
     int16_t * sample = ioData->mBuffers[0].mData;
     UInt32 channelsPerFrame = self->_dataFormat.mChannelsPerFrame;
     for (UInt32 i = 0; i < inNumberFrames; i++) {
-        int16_t sineValue = 16384.0 * sin(self->_currentPhase);
+        // Divide by four to keep the volume away from the max
+        int16_t sampleValue = A440SineWaveGeneratorNextSample(&self->_sineWaveGenerator) / 4;
         for (int channel = 0; channel < channelsPerFrame; channel++) {
-            sample[channel] = sineValue;
+            sample[channel] = sampleValue;
         }
-        self->_currentPhase += self->_phaseIncrement;
         sample += channelsPerFrame;
     }
     
     ioData->mBuffers[0].mDataByteSize = inNumberFrames*self->_dataFormat.mBytesPerFrame;
     
-    // Keep the phase between 0 and 2*M_PI
-    while (self->_currentPhase > 2*M_PI) {
-        self->_currentPhase -= 2*M_PI;
-    }
-
     return noErr;
 }
 

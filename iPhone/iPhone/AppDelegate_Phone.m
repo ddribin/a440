@@ -12,7 +12,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
 	
-    _mainViewController = [[MainViewController alloc] initWithNibName:@"MainViewController"
+    _mainViewController = [[MainViewController alloc] initWithNibName:@"MainViewController_Phone"
                                                                bundle:[NSBundle mainBundle]];
     
     UIView * view = [_mainViewController view];

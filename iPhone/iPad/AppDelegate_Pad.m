@@ -1,21 +1,21 @@
 //
-//  AppDelegate_Pad.m
-//  A440
-//
-//  Created by Dave Dribin on 4/22/10.
-//  Copyright Bit Maki, Inc. 2010. All rights reserved.
-//
 
 #import "AppDelegate_Pad.h"
+#import "MainViewController.h"
 
 @implementation AppDelegate_Pad
 
 @synthesize window;
 
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{    
 	
-    // Override point for customization after application launch
+    _mainViewController = [[MainViewController alloc] initWithNibName:@"MainViewController_Pad"
+                                                               bundle:[NSBundle mainBundle]];
+    
+    UIView * view = [_mainViewController view];
+    [window addSubview:view];
 	
     [window makeKeyAndVisible];
 	
@@ -23,7 +23,9 @@
 }
 
 
-- (void)dealloc {
+- (void)dealloc
+{
+    [_mainViewController release];
     [window release];
     [super dealloc];
 }

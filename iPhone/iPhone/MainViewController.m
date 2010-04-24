@@ -1,10 +1,4 @@
 //
-//  MainViewController.m
-//  A440
-//
-//  Created by Dave Dribin on 4/22/10.
-//  Copyright 2010 Bit Maki, Inc. All rights reserved.
-//
 
 #import "MainViewController.h"
 #import "A440Player.h"

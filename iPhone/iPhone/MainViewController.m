@@ -16,7 +16,21 @@
 - (void)stop;
 @end
 
+static Class sRowToClass[2];
+
 @implementation MainViewController
+
+@synthesize playerTypePicker = _playerTypePicker;
+
++ (void)initialize
+{
+    if (self != [MainViewController class]) {
+        return;
+    }
+    
+    sRowToClass[0] = [A440AudioQueue class];
+    sRowToClass[1] = [A440AUGraph class];
+}
 
 #if 0
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -42,13 +56,13 @@
 }
 */
 
-/*
+#if 0
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-*/
+#endif
 
 
 - (void)didReceiveMemoryWarning
@@ -78,29 +92,50 @@
 
 - (void)start;
 {
-    Class playerClass = [A440AudioQueue class];
+    NSInteger row = [_playerTypePicker selectedRowInComponent:0];
+    Class playerClass = sRowToClass[row];
     _player = [[playerClass alloc] init];
     NSLog(@"Player: %@", _player);
     
     NSError * error = nil;
     if (![_player start:&error]) {
-        // [self presentError:error];
-        [_player release];
-        _player = nil;
-        return;
+        NSLog(@"Could not start: %@ %@", error, [error userInfo]);
     }
-}
+}   
 
 - (void)stop;
 {
     NSError * error = nil;
     if (![_player stop:&error]) {
-        // [self presentError:error];
-        return;
+        NSLog(@"Could not stop: %@ %@", error, [error userInfo]);
     }
     
     [_player release];
     _player = nil;
+}
+
+#pragma mark - UIPickerView
+
+static NSString * sRowToLabel[2] = {
+    @"Audio Queue",
+    @"AUGraph",
+};
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)thePickerView
+{
+	
+	return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)thePickerView numberOfRowsInComponent:(NSInteger)component
+{
+	
+	return (sizeof(sRowToLabel)/sizeof(*sRowToLabel));
+}
+
+- (NSString *)pickerView:(UIPickerView *)thePickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return sRowToLabel[row];
 }
 
 @end

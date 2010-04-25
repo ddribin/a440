@@ -50,13 +50,15 @@ static Class sRowToClass[2];
 }
 */
 
-#if 0
 // Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        return YES;
+    } else {
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    }
 }
-#endif
 
 
 - (void)didReceiveMemoryWarning
@@ -86,6 +88,10 @@ static Class sRowToClass[2];
 
 - (void)start;
 {
+    if (_player != nil) {
+        return;
+    }
+    
     NSInteger row = [_playerTypePicker selectedRowInComponent:0];
     Class playerClass = sRowToClass[row];
     _player = [[playerClass alloc] init];
@@ -99,6 +105,10 @@ static Class sRowToClass[2];
 
 - (void)stop;
 {
+    if (_player == nil) {
+        return;
+    }
+    
     NSError * error = nil;
     if (![_player stop:&error]) {
         NSLog(@"Could not stop: %@ %@", error, [error userInfo]);

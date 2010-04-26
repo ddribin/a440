@@ -30,6 +30,7 @@
 - (OSStatus)addOutputNode;
 - (OSStatus)addConverterNode;
 - (OSStatus)setDataFormatOfConverterAudioUnit;
+- (OSStatus)setMaximumFramesPerSlice;
 - (OSStatus)setRenderCallbackOfConverterNode;
 - (void)setupDataFormat;
 @end
@@ -56,6 +57,7 @@ static OSStatus MyRenderer(void *                           inRefCon,
     FAIL_ON_ERR(AUGraphOpen(_graph));
     [self setupDataFormat];
     FAIL_ON_ERR([self setDataFormatOfConverterAudioUnit]);
+    FAIL_ON_ERR([self setMaximumFramesPerSlice]);
     FAIL_ON_ERR([self setRenderCallbackOfConverterNode]);
     FAIL_ON_ERR(AUGraphInitialize(_graph));
     A440SineWaveGeneratorInitWithFrequency(&_sineWaveGenerator, 440.0);
@@ -132,6 +134,41 @@ failed:
                                   &_dataFormat,
                                   sizeof(_dataFormat));
     return status;
+}
+
+- (OSStatus)setMaximumFramesPerSlice;
+{
+#if TARGET_OS_IPHONE
+    /*
+     * See Technical Q&A QA1606 Audio Unit Processing Graph -
+     *   Ensuring audio playback continues when screen is locked
+     *
+     * http://developer.apple.com/iphone/library/qa/qa2009/qa1606.html
+     *
+     * Need to set kAudioUnitProperty_MaximumFramesPerSlice to 4096 on all
+     * non-output audio units.  In this case, that's only the converter unit.
+     */
+    
+    AudioUnit converterAudioUnit;
+    OSStatus status;
+    status = AUGraphNodeInfo(_graph, _converterNode, NULL, &converterAudioUnit);
+    if (status != noErr) {
+        return status;
+    }
+    
+    UInt32 maxFramesPerSlice = 4096;
+    status = AudioUnitSetProperty(converterAudioUnit,
+                                  kAudioUnitProperty_MaximumFramesPerSlice,
+                                  kAudioUnitScope_Global,
+                                  0,
+                                  &maxFramesPerSlice,
+                                  sizeof(maxFramesPerSlice));
+    return status;
+    
+#else
+    // Don't bother on the desktop.
+    return noErr;
+#endif
 }
 
 - (OSStatus)setRenderCallbackOfConverterNode;

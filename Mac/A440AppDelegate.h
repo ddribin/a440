@@ -16,6 +16,6 @@
 @property (assign) IBOutlet NSButton * startStopButton;
 @property (assign) IBOutlet NSMatrix * playerTypeMatrix;
 
-- (IBAction)startStop:(id)sender;
+- (IBAction)playStop:(id)sender;
 
 @end

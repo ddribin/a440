@@ -21,7 +21,7 @@ static OSStatus MyRenderer(void *                           inRefCon,
 
 @implementation A440AUGraph
 
-- (BOOL)start:(NSError **)error;
+- (BOOL)play:(NSError **)error;
 {
     NSAssert(_graph == NULL, @"Graph is already started");
 

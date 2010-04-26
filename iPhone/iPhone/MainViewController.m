@@ -146,7 +146,7 @@ static Class sRowToClass[2];
     NSLog(@"Player: %@", _player);
     
     NSError * error = nil;
-    if (![_player start:&error]) {
+    if (![_player play:&error]) {
         NSLog(@"Could not start: %@ %@", error, [error userInfo]);
     }
 }   

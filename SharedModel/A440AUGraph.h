@@ -18,7 +18,7 @@
     A440SineWaveGenerator _sineWaveGenerator;
 }
 
-- (BOOL)start:(NSError **)error;
+- (BOOL)play:(NSError **)error;
 - (BOOL)stop:(NSError **)error;
 
 @end

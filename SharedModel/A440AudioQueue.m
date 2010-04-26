@@ -28,7 +28,7 @@ static void HandleOutputBuffer(void * inUserData,
     [super dealloc];
 }
 
-- (BOOL)start:(NSError **)error;
+- (BOOL)play:(NSError **)error;
 {
     NSAssert(_queue == NULL, @"Queue is already setup");
 

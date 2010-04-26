@@ -5,7 +5,9 @@
 #import "A440AUGraph.h"
 
 @interface A440AppDelegate ()
-- (void)start;
+@property (nonatomic, readonly, getter=isPlaying) BOOL playing;
+
+- (void)play;
 - (void)stop;
 - (BOOL)presentError:(NSError *)error;
 @end
@@ -34,16 +36,23 @@ Class sRowToClass[2];
     [super dealloc];
 }
 
-- (IBAction)startStop:(id)sender;
+- (IBAction)playStop:(id)sender;
 {
-    if (_player == nil) {
-        [self start];
+    if (!self.isPlaying) {
+        [self play];
     } else {
         [self stop];
     }
 }
 
-- (void)start;
+- (BOOL)isPlaying;
+{
+    BOOL isPlaying = (_player != nil);
+    return isPlaying;
+}
+
+
+- (void)play;
 {
     NSUInteger row = [_playerTypeMatrix selectedRow];
     Class playerClass = sRowToClass[row];
@@ -51,7 +60,7 @@ Class sRowToClass[2];
     NSLog(@"Player: %@", _player);
     
     NSError * error = nil;
-    if (![_player start:&error]) {
+    if (![_player play:&error]) {
         [self presentError:error];
         [_player release];
         _player = nil;
@@ -72,7 +81,7 @@ Class sRowToClass[2];
     
     [_player release];
     _player = nil;
-    [_startStopButton setTitle:@"Start"];
+    [_startStopButton setTitle:@"Play"];
     [_playerTypeMatrix setEnabled:YES];
 }
 

@@ -6,7 +6,10 @@
 #import "A440AUGraph.h"
 
 @interface MainViewController ()
-- (void)start;
+@property (nonatomic, readonly, getter=isPlaying) BOOL playing;
+
+- (void)setupAudioSession;
+- (void)play;
 - (void)stop;
 @end
 
@@ -43,12 +46,11 @@ static Class sRowToClass[2];
     [super dealloc];
 }
 
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    [self setupAudioSession];
 }
-*/
 
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -76,19 +78,65 @@ static Class sRowToClass[2];
     // e.g. self.myOutlet = nil;
 }
 
-- (IBAction)startStop:(id)sender;
+#pragma mark -
+#pragma mark Audio session handling
+
+- (void)setupAudioSession;
+{
+    AVAudioSession * session = [AVAudioSession sharedInstance];
+    NSError * error = nil;
+    if (![session setActive:YES error:&error]) {
+        NSLog(@"Could not activate audio session: %@ %@", error, [error userInfo]);
+        return;
+    }
+    
+    [session setDelegate:self];
+    if (![session setCategory:AVAudioSessionCategoryPlayback error:&error]) {
+        NSLog(@"Could not seet audio session category: %@ %@", error, [error userInfo]);
+    }
+}
+
+- (void)beginInterruption;
+{
+    _playOnEndInterruption = self.isPlaying;
+    [self stop];
+}
+
+- (void)endInterruption;
+{
+    NSError * error = nil;
+    if (![[AVAudioSession sharedInstance] setActive:YES error:&error]) {
+        NSLog(@"Could not activate audio session: %@ %@", error, [error userInfo]);
+        return;
+    }
+
+    if (_playOnEndInterruption) {
+        [self play];
+    }
+}
+
+#pragma mark -
+#pragma mark Player control
+
+- (IBAction)playStop:(id)sender;
 {
     UISwitch * playerSwitch = sender;
     if (playerSwitch.on) {
-        [self start];
+        [self play];
     } else {
         [self stop];
     }
 }
 
-- (void)start;
+- (BOOL)isPlaying;
 {
-    if (_player != nil) {
+    BOOL isPlaying = (_player != nil);
+    return isPlaying;
+}
+
+- (void)play;
+{
+    if (self.isPlaying) {
         return;
     }
     
@@ -105,7 +153,7 @@ static Class sRowToClass[2];
 
 - (void)stop;
 {
-    if (_player == nil) {
+    if (!self.isPlaying) {
         return;
     }
     
@@ -127,13 +175,11 @@ static NSString * sRowToLabel[] = {
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)thePickerView
 {
-	
 	return 1;
 }
 
 - (NSInteger)pickerView:(UIPickerView *)thePickerView numberOfRowsInComponent:(NSInteger)component
 {
-	
 	return (sizeof(sRowToLabel)/sizeof(*sRowToLabel));
 }
 

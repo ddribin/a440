@@ -21,6 +21,7 @@
 		55B23F8011801B0B0076B834 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B23F7011801AE40076B834 /* AudioToolbox.framework */; };
 		55B2403811813BC90076B834 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B2403611813BC90076B834 /* MainViewController.m */; };
 		55B2403911813BC90076B834 /* MainViewController_Phone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55B2403711813BC90076B834 /* MainViewController_Phone.xib */; };
+		55B8936D1185BF4400FEB15C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B8936C1185BF4400FEB15C /* AVFoundation.framework */; };
 		55E57A811182AA44002B41E4 /* A440SineWaveGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = 55E57A7F1182AA44002B41E4 /* A440SineWaveGenerator.c */; };
 		55E57B6C1182B6D5002B41E4 /* MainViewController_Pad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55E57B6B1182B6D5002B41E4 /* MainViewController_Pad.xib */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,7 @@
 		55B2403511813BC90076B834 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = iPhone/MainViewController.h; sourceTree = "<group>"; };
 		55B2403611813BC90076B834 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainViewController.m; path = iPhone/MainViewController.m; sourceTree = "<group>"; };
 		55B2403711813BC90076B834 /* MainViewController_Phone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainViewController_Phone.xib; sourceTree = "<group>"; };
+		55B8936C1185BF4400FEB15C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		55E57A7F1182AA44002B41E4 /* A440SineWaveGenerator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = A440SineWaveGenerator.c; sourceTree = "<group>"; };
 		55E57A801182AA44002B41E4 /* A440SineWaveGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A440SineWaveGenerator.h; sourceTree = "<group>"; };
 		55E57B6B1182B6D5002B41E4 /* MainViewController_Pad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainViewController_Pad.xib; path = ../iPhone/MainViewController_Pad.xib; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				55B23F7B11801AFD0076B834 /* CoreAudio.framework in Frameworks */,
 				55B23F8011801B0B0076B834 /* AudioToolbox.framework in Frameworks */,
+				55B8936D1185BF4400FEB15C /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,6 +144,7 @@
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
 				55B23F7011801AE40076B834 /* AudioToolbox.framework */,
 				55B23F7A11801AFD0076B834 /* CoreAudio.framework */,
+				55B8936C1185BF4400FEB15C /* AVFoundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

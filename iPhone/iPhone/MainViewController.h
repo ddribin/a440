@@ -28,15 +28,14 @@
 @protocol A440Player;
 
 
-@interface MainViewController : UIViewController
-    <UIPickerViewDataSource, UIPickerViewDelegate, AVAudioSessionDelegate>
+@interface MainViewController : UIViewController <AVAudioSessionDelegate>
 {
     id<A440Player> _player;
-    UIPickerView * _playerTypePicker;
+    UISegmentedControl * _playerTypeSegmentedControl;
     BOOL _playOnEndInterruption;
 }
 
-@property (nonatomic, retain) IBOutlet UIPickerView * playerTypePicker;
+@property (nonatomic, retain) IBOutlet UISegmentedControl * playerTypeSegmentedControl;
 
 - (IBAction)playStop:(id)sender;
 

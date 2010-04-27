@@ -39,7 +39,7 @@ static Class sRowToClass[2];
 
 @implementation MainViewController
 
-@synthesize playerTypePicker = _playerTypePicker;
+@synthesize playerTypeSegmentedControl = _playerTypeSegmentedControl;
 
 + (void)initialize
 {
@@ -74,14 +74,9 @@ static Class sRowToClass[2];
     [self setupAudioSession];
 }
 
-// Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return YES;
-    } else {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
-    }
+    return YES;
 }
 
 
@@ -162,8 +157,8 @@ static Class sRowToClass[2];
         return;
     }
     
-    NSInteger row = [_playerTypePicker selectedRowInComponent:0];
-    Class playerClass = sRowToClass[row];
+    NSInteger selectedIndex = _playerTypeSegmentedControl.selectedSegmentIndex;
+    Class playerClass = sRowToClass[selectedIndex];
     _player = [[playerClass alloc] init];
     NSLog(@"Player: %@", _player);
     
@@ -171,7 +166,11 @@ static Class sRowToClass[2];
     if (![_player play:&error]) {
         NSLog(@"Could not start: %@ %@", error, [error userInfo]);
     }
-}   
+    
+    [_playerTypeSegmentedControl setEnabled:NO forSegmentAtIndex:0];
+    [_playerTypeSegmentedControl setEnabled:NO forSegmentAtIndex:1];
+    [_playerTypeSegmentedControl setSelectedSegmentIndex:selectedIndex];
+}
 
 - (void)stop;
 {
@@ -186,28 +185,9 @@ static Class sRowToClass[2];
     
     [_player release];
     _player = nil;
-}
-
-#pragma mark - UIPickerView
-
-static NSString * sRowToLabel[] = {
-    @"Audio Queue",
-    @"AUGraph",
-};
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)thePickerView
-{
-	return 1;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)thePickerView numberOfRowsInComponent:(NSInteger)component
-{
-	return (sizeof(sRowToLabel)/sizeof(*sRowToLabel));
-}
-
-- (NSString *)pickerView:(UIPickerView *)thePickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    return sRowToLabel[row];
+    
+    [_playerTypeSegmentedControl setEnabled:YES forSegmentAtIndex:0];
+    [_playerTypeSegmentedControl setEnabled:YES forSegmentAtIndex:1];
 }
 
 @end

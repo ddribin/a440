@@ -10,17 +10,16 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		2860E328111B887F00E27156 /* AppDelegate_Phone.m in Sources */ = {isa = PBXBuildFile; fileRef = 2860E326111B887F00E27156 /* AppDelegate_Phone.m */; };
 		2860E329111B887F00E27156 /* MainWindow_Phone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2860E327111B887F00E27156 /* MainWindow_Phone.xib */; };
-		2860E32E111B888700E27156 /* AppDelegate_Pad.m in Sources */ = {isa = PBXBuildFile; fileRef = 2860E32C111B888700E27156 /* AppDelegate_Pad.m */; };
 		2860E32F111B888700E27156 /* MainWindow_Pad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2860E32D111B888700E27156 /* MainWindow_Pad.xib */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		55B23F6811801A590076B834 /* A440AudioQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B23F6411801A590076B834 /* A440AudioQueue.m */; };
 		55B23F6911801A590076B834 /* A440AUGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B23F6611801A590076B834 /* A440AUGraph.m */; };
 		55B23F7B11801AFD0076B834 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B23F7A11801AFD0076B834 /* CoreAudio.framework */; };
 		55B23F8011801B0B0076B834 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B23F7011801AE40076B834 /* AudioToolbox.framework */; };
-		55B2403811813BC90076B834 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B2403611813BC90076B834 /* MainViewController.m */; };
 		55B2403911813BC90076B834 /* MainViewController_Phone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55B2403711813BC90076B834 /* MainViewController_Phone.xib */; };
+		55B26B461186A29800A603C3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B26B451186A29800A603C3 /* MainViewController.m */; };
+		55B26B4C1186A2CC00A603C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B26B4B1186A2CC00A603C3 /* AppDelegate.m */; };
 		55B8936D1185BF4400FEB15C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B8936C1185BF4400FEB15C /* AVFoundation.framework */; };
 		55E57A811182AA44002B41E4 /* A440SineWaveGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = 55E57A7F1182AA44002B41E4 /* A440SineWaveGenerator.c */; };
 		55E57B6C1182B6D5002B41E4 /* MainViewController_Pad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55E57B6B1182B6D5002B41E4 /* MainViewController_Pad.xib */; };
@@ -30,11 +29,7 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* A440.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = A440.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		2860E325111B887F00E27156 /* AppDelegate_Phone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate_Phone.h; sourceTree = "<group>"; };
-		2860E326111B887F00E27156 /* AppDelegate_Phone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate_Phone.m; sourceTree = "<group>"; };
 		2860E327111B887F00E27156 /* MainWindow_Phone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow_Phone.xib; sourceTree = "<group>"; };
-		2860E32B111B888700E27156 /* AppDelegate_Pad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate_Pad.h; sourceTree = "<group>"; };
-		2860E32C111B888700E27156 /* AppDelegate_Pad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate_Pad.m; sourceTree = "<group>"; };
 		2860E32D111B888700E27156 /* MainWindow_Pad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow_Pad.xib; sourceTree = "<group>"; };
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Shared/main.m; sourceTree = "<group>"; };
@@ -46,14 +41,16 @@
 		55B23F6711801A590076B834 /* A440Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A440Player.h; sourceTree = "<group>"; };
 		55B23F7011801AE40076B834 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		55B23F7A11801AFD0076B834 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		55B2403511813BC90076B834 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = iPhone/MainViewController.h; sourceTree = "<group>"; };
-		55B2403611813BC90076B834 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainViewController.m; path = iPhone/MainViewController.m; sourceTree = "<group>"; };
+		55B2403511813BC90076B834 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		55B2403711813BC90076B834 /* MainViewController_Phone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainViewController_Phone.xib; sourceTree = "<group>"; };
+		55B26B451186A29800A603C3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		55B26B4A1186A2CC00A603C3 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		55B26B4B1186A2CC00A603C3 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		55B8936C1185BF4400FEB15C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		55E57A7F1182AA44002B41E4 /* A440SineWaveGenerator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = A440SineWaveGenerator.c; sourceTree = "<group>"; };
 		55E57A801182AA44002B41E4 /* A440SineWaveGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A440SineWaveGenerator.h; sourceTree = "<group>"; };
-		55E57B6B1182B6D5002B41E4 /* MainViewController_Pad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainViewController_Pad.xib; path = ../iPhone/MainViewController_Pad.xib; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* A440-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "A440-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		55E57B6B1182B6D5002B41E4 /* MainViewController_Pad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainViewController_Pad.xib; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* A440-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "A440-Info.plist"; path = "../A440-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,10 +81,8 @@
 		2860E324111B887F00E27156 /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
-				2860E325111B887F00E27156 /* AppDelegate_Phone.h */,
-				2860E326111B887F00E27156 /* AppDelegate_Phone.m */,
-				55B2403711813BC90076B834 /* MainViewController_Phone.xib */,
 				2860E327111B887F00E27156 /* MainWindow_Phone.xib */,
+				55B2403711813BC90076B834 /* MainViewController_Phone.xib */,
 			);
 			path = iPhone;
 			sourceTree = "<group>";
@@ -95,8 +90,6 @@
 		2860E32A111B888700E27156 /* iPad */ = {
 			isa = PBXGroup;
 			children = (
-				2860E32B111B888700E27156 /* AppDelegate_Pad.h */,
-				2860E32C111B888700E27156 /* AppDelegate_Pad.m */,
 				2860E32D111B888700E27156 /* MainWindow_Pad.xib */,
 				55E57B6B1182B6D5002B41E4 /* MainViewController_Pad.xib */,
 			);
@@ -106,11 +99,13 @@
 		28EEBF621118D79A00187D67 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				55B26B4A1186A2CC00A603C3 /* AppDelegate.h */,
+				55B26B4B1186A2CC00A603C3 /* AppDelegate.m */,
 				55B2403511813BC90076B834 /* MainViewController.h */,
-				55B2403611813BC90076B834 /* MainViewController.m */,
+				55B26B451186A29800A603C3 /* MainViewController.m */,
 				8D1107310486CEB800E47090 /* A440-Info.plist */,
 			);
-			name = Shared;
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
@@ -221,12 +216,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
-				2860E328111B887F00E27156 /* AppDelegate_Phone.m in Sources */,
-				2860E32E111B888700E27156 /* AppDelegate_Pad.m in Sources */,
 				55B23F6811801A590076B834 /* A440AudioQueue.m in Sources */,
 				55B23F6911801A590076B834 /* A440AUGraph.m in Sources */,
-				55B2403811813BC90076B834 /* MainViewController.m in Sources */,
 				55E57A811182AA44002B41E4 /* A440SineWaveGenerator.c in Sources */,
+				55B26B461186A29800A603C3 /* MainViewController.m in Sources */,
+				55B26B4C1186A2CC00A603C3 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

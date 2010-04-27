@@ -26,12 +26,14 @@
 
 @class  MainViewController;
 
-@interface AppDelegate_Pad : NSObject <UIApplicationDelegate> {
-    UIWindow *window;
+@interface AppDelegate : NSObject <UIApplicationDelegate>
+{
+    UIWindow * _window;
     MainViewController * _mainViewController;
 }
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, retain) IBOutlet UIWindow * window;
+@property (nonatomic, retain) IBOutlet MainViewController * mainViewController;
 
 @end
 

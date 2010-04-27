@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-#import "AppDelegate_Phone.h"
+#import "AppDelegate.h"
 #import "MainViewController.h"
 
-@implementation AppDelegate_Phone
+@implementation AppDelegate
 
 @synthesize window = _window;
 @synthesize mainViewController = _mainViewController;
@@ -34,9 +34,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
 	
-    _mainViewController = [[MainViewController alloc] initWithNibName:@"MainViewController_Phone"
-                                                               bundle:[NSBundle mainBundle]];
-    
     UIView * view = [_mainViewController view];
     [_window addSubview:view];
 	

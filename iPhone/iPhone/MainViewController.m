@@ -29,10 +29,17 @@
 
 @interface MainViewController ()
 @property (nonatomic, readonly, getter=isPlaying) BOOL playing;
-
 - (void)setupAudioSession;
+
 - (void)play;
+- (id<A440Player>)newPlayerOfSelectedType;
+- (void)playPlayer;
+- (void)disablePlayerTypeSegementedControl;
+
 - (void)stop;
+- (void)stopPlayer;
+- (void)releasePlayer;
+- (void)enablePlayerTypeSegmentedControl;
 @end
 
 static Class sRowToClass[2];
@@ -157,20 +164,38 @@ static Class sRowToClass[2];
         return;
     }
     
+    _player = [self newPlayerOfSelectedType];
+    [self playPlayer];
+    [self disablePlayerTypeSegementedControl];
+}   
+
+- (id<A440Player>)newPlayerOfSelectedType;
+{
     NSInteger selectedIndex = _playerTypeSegmentedControl.selectedSegmentIndex;
     Class playerClass = sRowToClass[selectedIndex];
-    _player = [[playerClass alloc] init];
-    NSLog(@"Player: %@", _player);
-    
+    id<A440Player> player = [[playerClass alloc] init];
+    NSLog(@"Player: %@", player);
+    return player;
+}
+
+- (void)playPlayer;
+{
     NSError * error = nil;
     if (![_player play:&error]) {
         NSLog(@"Could not start: %@ %@", error, [error userInfo]);
     }
-    
+}
+
+- (void)disablePlayerTypeSegementedControl;
+{
+    // Not quite sure why, but you have to set the selected segment after disabling
+    NSInteger selectedIndex = _playerTypeSegmentedControl.selectedSegmentIndex;
     [_playerTypeSegmentedControl setEnabled:NO forSegmentAtIndex:0];
     [_playerTypeSegmentedControl setEnabled:NO forSegmentAtIndex:1];
     [_playerTypeSegmentedControl setSelectedSegmentIndex:selectedIndex];
 }
+
+#pragma mark -
 
 - (void)stop;
 {
@@ -178,14 +203,27 @@ static Class sRowToClass[2];
         return;
     }
     
+    [self stopPlayer];
+    [self releasePlayer];
+    [self enablePlayerTypeSegmentedControl];
+}
+
+- (void)stopPlayer;
+{
     NSError * error = nil;
     if (![_player stop:&error]) {
         NSLog(@"Could not stop: %@ %@", error, [error userInfo]);
     }
-    
+}
+
+- (void)releasePlayer;
+{
     [_player release];
     _player = nil;
-    
+}
+
+- (void)enablePlayerTypeSegmentedControl;
+{
     [_playerTypeSegmentedControl setEnabled:YES forSegmentAtIndex:0];
     [_playerTypeSegmentedControl setEnabled:YES forSegmentAtIndex:1];
 }

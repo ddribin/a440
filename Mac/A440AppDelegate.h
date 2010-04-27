@@ -27,10 +27,13 @@
 @protocol A440Player;
 
 
-@interface A440AppDelegate : NSObject <NSApplicationDelegate> {
+@interface A440AppDelegate : NSObject <NSApplicationDelegate>
+{
+    // Weak references
     NSWindow * _window;
     NSButton * _startStopButton;
     NSMatrix * _playerTypeMatrix;
+    
     id<A440Player> _player;
 }
 

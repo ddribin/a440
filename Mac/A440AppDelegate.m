@@ -30,7 +30,15 @@
 @property (nonatomic, readonly, getter=isPlaying) BOOL playing;
 
 - (void)play;
+- (id<A440Player>)newPlayerOfSelectedType;
+- (BOOL)playPlayer;
+- (void)updateUiToPlayingState;
+
 - (void)stop;
+- (BOOL)stopPlayer;
+- (void)releasePlayer;
+- (void)updateUiToStoppedState;
+
 - (BOOL)presentError:(NSError *)error;
 @end
 
@@ -73,39 +81,76 @@ Class sRowToClass[2];
     return isPlaying;
 }
 
-
 - (void)play;
+{
+    _player = [self newPlayerOfSelectedType];
+    if (![self playPlayer]) {
+        return;
+    }
+    [self updateUiToPlayingState];
+}
+
+- (id<A440Player>)newPlayerOfSelectedType;
 {
     NSUInteger row = [_playerTypeMatrix selectedRow];
     Class playerClass = sRowToClass[row];
-    _player = [[playerClass alloc] init];
-    NSLog(@"Player: %@", _player);
-    
+    id<A440Player> player = [[playerClass alloc] init];
+    NSLog(@"Player: %@", player);
+    return player;
+}
+
+- (BOOL)playPlayer;
+{
     NSError * error = nil;
     if (![_player play:&error]) {
         [self presentError:error];
         [_player release];
         _player = nil;
-        return;
+        return NO;
     }
-    
+    return YES;
+}
+
+- (void)updateUiToPlayingState;
+{
     [_startStopButton setTitle:@"Stop"];
     [_playerTypeMatrix setEnabled:NO];
 }
 
+#pragma mark -
+
 - (void)stop;
+{
+    if (![self stopPlayer]) {
+        return;
+    }
+    [self releasePlayer];
+    [self updateUiToStoppedState];
+}
+
+- (BOOL)stopPlayer;
 {
     NSError * error = nil;
     if (![_player stop:&error]) {
         [self presentError:error];
-        return;
+        return NO;
     }
-    
+    return YES;
+}
+
+- (void)releasePlayer;
+{
     [_player release];
     _player = nil;
+}
+
+- (void)updateUiToStoppedState;
+{
     [_startStopButton setTitle:@"Play"];
     [_playerTypeMatrix setEnabled:YES];
 }
+
+#pragma mark -
 
 - (BOOL)presentError:(NSError *)error;
 {

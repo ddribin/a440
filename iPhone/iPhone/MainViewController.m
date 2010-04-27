@@ -30,6 +30,8 @@
 @interface MainViewController ()
 @property (nonatomic, readonly, getter=isPlaying) BOOL playing;
 - (void)setupAudioSession;
+- (void)setupAudioSessionCategory;
+- (void)activateAudioSession;
 
 - (void)play;
 - (id<A440Player>)newPlayerOfSelectedType;
@@ -86,7 +88,6 @@ static Class sRowToClass[2];
     return YES;
 }
 
-
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -107,14 +108,15 @@ static Class sRowToClass[2];
 
 - (void)setupAudioSession;
 {
+    [self activateAudioSession];
+    [[AVAudioSession sharedInstance] setDelegate:self];
+    [self setupAudioSessionCategory];
+}
+
+- (void)setupAudioSessionCategory;
+{
+    NSError * error;
     AVAudioSession * session = [AVAudioSession sharedInstance];
-    NSError * error = nil;
-    if (![session setActive:YES error:&error]) {
-        NSLog(@"Could not activate audio session: %@ %@", error, [error userInfo]);
-        return;
-    }
-    
-    [session setDelegate:self];
     if (![session setCategory:AVAudioSessionCategoryPlayback error:&error]) {
         NSLog(@"Could not seet audio session category: %@ %@", error, [error userInfo]);
     }
@@ -128,14 +130,20 @@ static Class sRowToClass[2];
 
 - (void)endInterruption;
 {
-    NSError * error = nil;
-    if (![[AVAudioSession sharedInstance] setActive:YES error:&error]) {
-        NSLog(@"Could not activate audio session: %@ %@", error, [error userInfo]);
-        return;
-    }
+    [self activateAudioSession];
 
     if (_playOnEndInterruption) {
         [self play];
+    }
+}
+
+- (void)activateAudioSession;
+{
+    NSError * error = nil;
+    AVAudioSession * session = [AVAudioSession sharedInstance];
+    if (![session setActive:YES error:&error]) {
+        NSLog(@"Could not activate audio session: %@ %@", error, [error userInfo]);
+        return;
     }
 }
 

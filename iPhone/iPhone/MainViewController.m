@@ -74,6 +74,7 @@ static Class sRowToClass[2];
 - (void)dealloc
 {
     [_player release];
+    [_playerTypeSegmentedControl release];
     [super dealloc];
 }
 
@@ -101,6 +102,7 @@ static Class sRowToClass[2];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    self.playerTypeSegmentedControl = nil;
 }
 
 #pragma mark -

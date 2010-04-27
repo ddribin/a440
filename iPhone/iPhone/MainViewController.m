@@ -120,7 +120,7 @@ static Class sRowToClass[2];
     NSError * error;
     AVAudioSession * session = [AVAudioSession sharedInstance];
     if (![session setCategory:AVAudioSessionCategoryPlayback error:&error]) {
-        NSLog(@"Could not seet audio session category: %@ %@", error, [error userInfo]);
+        NSLog(@"Could not set audio session category: %@ %@", error, [error userInfo]);
     }
 }
 
@@ -192,7 +192,7 @@ static Class sRowToClass[2];
 {
     NSError * error = nil;
     if (![_player play:&error]) {
-        NSLog(@"Could not start: %@ %@", error, [error userInfo]);
+        NSLog(@"Could not play player: %@ %@", error, [error userInfo]);
     }
 }
 
@@ -222,7 +222,7 @@ static Class sRowToClass[2];
 {
     NSError * error = nil;
     if (![_player stop:&error]) {
-        NSLog(@"Could not stop: %@ %@", error, [error userInfo]);
+        NSLog(@"Could not stop player: %@ %@", error, [error userInfo]);
     }
 }
 

@@ -27,9 +27,8 @@
 
 typedef struct
 {
-    // Internally, store the phase as an integer from 0 - 0x3FFF (instead of 0 - 2*M_PI)
-    uint16_t currentPhase;
-    uint16_t phaseIncrement;
+    float currentPhase;
+    float phaseIncrement;
 } A440SineWaveGenerator;
 
 extern const Float64 SAMPLE_RATE;

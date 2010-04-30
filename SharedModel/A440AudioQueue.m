@@ -39,6 +39,7 @@
 static void HandleOutputBuffer(void * inUserData,
                                AudioQueueRef inAQ,
                                AudioQueueBufferRef inBuffer);
+static void FillFrame(A440AudioQueue * self, int16_t * sample);
 
 @implementation A440AudioQueue
 
@@ -57,7 +58,8 @@ static void HandleOutputBuffer(void * inUserData,
     OSStatus status;
     
     [self setupDataFormat];
-    FAIL_ON_ERR(AudioQueueNewOutput(&_dataFormat, HandleOutputBuffer, self, CFRunLoopGetCurrent(),
+    FAIL_ON_ERR(AudioQueueNewOutput(&_dataFormat, HandleOutputBuffer,
+                                    self, CFRunLoopGetCurrent(),
                                     kCFRunLoopCommonModes, 0, &_queue));
     FAIL_ON_ERR([self allocateBuffers]);
     A440SineWaveGeneratorInitWithFrequency(&_sineWaveGenerator, 440.0);
@@ -66,35 +68,38 @@ static void HandleOutputBuffer(void * inUserData,
     return YES;
     
 failed:
+    // Error handling...
     if (_queue != NULL) {
         AudioQueueDispose(_queue, YES);
         _queue = NULL;
     }
     
     if (error != NULL) {
-        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain
+                                     code:status userInfo:nil];
     }
     return NO;
 }
 
 - (void)setupDataFormat;
 {
-    // 16-bit native endian signed integer, stereo
+    // 16-bit native endian signed integer, stereo LPCM
     UInt32 formatFlags = (0
                           | kAudioFormatFlagIsPacked 
                           | kAudioFormatFlagIsSignedInteger 
                           | kAudioFormatFlagsNativeEndian
                           );
     
-    memset(&_dataFormat, 0, sizeof(_dataFormat));
-    _dataFormat.mFormatID = kAudioFormatLinearPCM;
-    _dataFormat.mSampleRate = SAMPLE_RATE;
-    _dataFormat.mChannelsPerFrame = 2;
-    _dataFormat.mFormatFlags = formatFlags;
-    _dataFormat.mBitsPerChannel = 16;
-    _dataFormat.mFramesPerPacket = 1;
-    _dataFormat.mBytesPerFrame = _dataFormat.mBitsPerChannel * _dataFormat.mChannelsPerFrame / 8;
-    _dataFormat.mBytesPerPacket = _dataFormat.mBytesPerFrame * _dataFormat.mFramesPerPacket;
+    _dataFormat = (AudioStreamBasicDescription){
+        .mFormatID = kAudioFormatLinearPCM,
+        .mFormatFlags = formatFlags,
+        .mSampleRate = SAMPLE_RATE,
+        .mBitsPerChannel = 16,
+        .mChannelsPerFrame = 2,
+        .mBytesPerFrame = 4,
+        .mFramesPerPacket = 1,
+        .mBytesPerPacket = 4,
+    };
 }
 
 - (OSStatus)allocateBuffers;
@@ -103,20 +108,20 @@ failed:
     
     OSStatus status;
     for (int i = 0; i < kNumberBuffers; ++i) {
-        status = AudioQueueAllocateBuffer(_queue, bufferSize, &_buffers[i]);
+        status = AudioQueueAllocateBuffer(_queue, bufferSize,
+                                          &_buffers[i]);
         if (status != noErr) {
-            goto failed;
+            return status;
         }
     }
     return noErr;
-    
-failed:
-    return status;
 }
 
 - (UInt32)calculateBufferSizeForSeconds:(Float64)seconds;
 {
-    UInt32 bufferSize = _dataFormat.mSampleRate * _dataFormat.mBytesPerPacket * seconds;
+    UInt32 bufferSize = (_dataFormat.mSampleRate *
+                         _dataFormat.mBytesPerPacket *
+                         seconds);
     return bufferSize;
 }
 
@@ -140,23 +145,36 @@ static void HandleOutputBuffer(void * inUserData,
         return;
     }
     
-    UInt32 numberOfFrames = inBuffer->mAudioDataBytesCapacity / self->_dataFormat.mBytesPerFrame;
     int16_t * sample = inBuffer->mAudioData;
-    UInt32 channelsPerFrame = self->_dataFormat.mChannelsPerFrame;
+    UInt32 numberOfFrames = (inBuffer->mAudioDataBytesCapacity /
+                             self->_dataFormat.mBytesPerFrame);
+    
     for (UInt32 i = 0; i < numberOfFrames; i++) {
-        // Divide by four to keep the volume away from the max
-        int16_t sampleValue = A440SineWaveGeneratorNextSample(&self->_sineWaveGenerator) / 4;
-        for (int channel = 0; channel < channelsPerFrame; channel++) {
-            sample[channel] = sampleValue;
-        }
-        sample += channelsPerFrame;
+        FillFrame(self, sample);
+        sample += self->_dataFormat.mChannelsPerFrame;
     }
     
-    inBuffer->mAudioDataByteSize = numberOfFrames * self->_dataFormat.mBytesPerFrame;
-    OSStatus result = AudioQueueEnqueueBuffer(self->_queue, inBuffer, 0, NULL);
+    inBuffer->mAudioDataByteSize = (numberOfFrames *
+                                    self->_dataFormat.mBytesPerFrame);
+    
+    OSStatus result;
+    result = AudioQueueEnqueueBuffer(self->_queue, inBuffer, 0, NULL);
     if (result != noErr) {
         NSLog(@"AudioQueueEnqueueBuffer error: %d", result);
     }
+}
+
+static void FillFrame(A440AudioQueue * self, int16_t * sample)
+{
+    A440SineWaveGenerator * generator = &self->_sineWaveGenerator;
+    int16_t sampleValue =
+        A440SineWaveGeneratorNextSample(generator);
+    // Divide by four to keep the volume away from the max
+    sampleValue /= 4;
+    
+    // Fill two channels
+    sample[0] = sampleValue;
+    sample[1] = sampleValue;
 }
 
 #pragma mark -
@@ -173,8 +191,10 @@ static void HandleOutputBuffer(void * inUserData,
     return YES;
     
 failed:
+    // Error handling...
     if (error != NULL) {
-        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain
+                                     code:status userInfo:nil];
     }
     return NO;
 }

@@ -60,17 +60,6 @@ static Class sRowToClass[2];
     sRowToClass[1] = [A440AUGraph class];
 }
 
-#if 0
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self == nil) {
-        return nil;
-    }
-    
-    return self;
-}
-#endif
-
 - (void)dealloc
 {
     [_player release];

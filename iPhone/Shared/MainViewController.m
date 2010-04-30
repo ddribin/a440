@@ -30,7 +30,7 @@
 @interface MainViewController ()
 @property (nonatomic, readonly, getter=isPlaying) BOOL playing;
 - (void)setupAudioSession;
-- (void)setupAudioSessionCategory;
+- (void)setPlaybackAudioSessionCategory;
 - (void)activateAudioSession;
 
 - (void)play;
@@ -101,10 +101,10 @@ static Class sRowToClass[2];
 {
     [self activateAudioSession];
     [[AVAudioSession sharedInstance] setDelegate:self];
-    [self setupAudioSessionCategory];
+    [self setPlaybackAudioSessionCategory];
 }
 
-- (void)setupAudioSessionCategory;
+- (void)setPlaybackAudioSessionCategory;
 {
     NSError * error;
     AVAudioSession * session = [AVAudioSession sharedInstance];

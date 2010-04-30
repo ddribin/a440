@@ -38,6 +38,7 @@ void A440SineWaveGeneratorInitWithFrequency(A440SineWaveGenerator * self, double
     //   cycles     radians     seconds     radians
     //   ------  *  -------  *  -------  =  -------
     //   second      cycle      sample      sample
+    self->currentPhase = 0.0;
     self->phaseIncrement = frequency * 2*M_PI / SAMPLE_RATE;
 }
 
@@ -47,7 +48,7 @@ int16_t A440SineWaveGeneratorNextSample(A440SineWaveGenerator * self)
     
     self->currentPhase += self->phaseIncrement;
     // Keep the value between 0 and 2*M_PI
-    if (self->currentPhase > 2*M_PI) {
+    while (self->currentPhase > 2*M_PI) {
         self->currentPhase -= 2*M_PI;
     }
     

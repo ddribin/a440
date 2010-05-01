@@ -42,6 +42,8 @@ static OSStatus MyRenderer(void *                           inRefCon,
                            UInt32                           inNumberFrames,
                            AudioBufferList *                ioData);
 
+static void FillFrame(A440AUGraph * self, int16_t * sample);
+
 @implementation A440AUGraph
 
 - (BOOL)play:(NSError **)error;
@@ -53,7 +55,8 @@ static OSStatus MyRenderer(void *                           inRefCon,
     FAIL_ON_ERR(NewAUGraph(&_graph));
     FAIL_ON_ERR([self addOutputNode]);
     FAIL_ON_ERR([self addConverterNode]);
-    FAIL_ON_ERR(AUGraphConnectNodeInput(_graph, _converterNode, 0, _outputNode, 0));
+    FAIL_ON_ERR(AUGraphConnectNodeInput(_graph, _converterNode, 0,
+                                        _outputNode, 0));
     FAIL_ON_ERR(AUGraphOpen(_graph));
     [self setupDataFormat];
     FAIL_ON_ERR([self setDataFormatOfConverterAudioUnit]);
@@ -66,6 +69,7 @@ static OSStatus MyRenderer(void *                           inRefCon,
     return YES;
     
 failed:
+    // Error handling...
     if (_graph != NULL) {
         DisposeAUGraph(_graph);
     }
@@ -78,51 +82,55 @@ failed:
 
 - (OSStatus)addOutputNode;
 {
-    AudioComponentDescription description = {0};
-    description.componentType = kAudioUnitType_Output;
+    AudioComponentDescription description = {
+        .componentType = kAudioUnitType_Output,
 #if TARGET_OS_IPHONE
-    description.componentSubType = kAudioUnitSubType_RemoteIO;
+        .componentSubType = kAudioUnitSubType_RemoteIO,
 #else
-    description.componentSubType = kAudioUnitSubType_DefaultOutput;
+        .componentSubType = kAudioUnitSubType_DefaultOutput,
 #endif
-    description.componentManufacturer = kAudioUnitManufacturer_Apple;
+        .componentManufacturer = kAudioUnitManufacturer_Apple,
+    };
     return AUGraphAddNode(_graph, &description, &_outputNode);
 }
 
 - (OSStatus)addConverterNode;
 {
-    AudioComponentDescription description = {0};
-    description.componentType = kAudioUnitType_FormatConverter;
-    description.componentSubType = kAudioUnitSubType_AUConverter;
-    description.componentManufacturer = kAudioUnitManufacturer_Apple;
+    AudioComponentDescription description = {
+        .componentType = kAudioUnitType_FormatConverter,
+        .componentSubType = kAudioUnitSubType_AUConverter,
+        .componentManufacturer = kAudioUnitManufacturer_Apple,
+    };
     return AUGraphAddNode(_graph, &description, &_converterNode);
 }
 
 - (void)setupDataFormat;
 {
-    // 16-bit native endian signed integer, stereo
+    // 16-bit native endian signed integer, stereo LPCM
     UInt32 formatFlags = (0
                           | kAudioFormatFlagIsPacked 
                           | kAudioFormatFlagIsSignedInteger 
                           | kAudioFormatFlagsNativeEndian
                           );
     
-    memset(&_dataFormat, 0, sizeof(_dataFormat));
-    _dataFormat.mFormatID = kAudioFormatLinearPCM;
-    _dataFormat.mSampleRate = SAMPLE_RATE;
-    _dataFormat.mChannelsPerFrame = 2;
-    _dataFormat.mFormatFlags = formatFlags;
-    _dataFormat.mBitsPerChannel = 16;
-    _dataFormat.mFramesPerPacket = 1;
-    _dataFormat.mBytesPerFrame = _dataFormat.mBitsPerChannel * _dataFormat.mChannelsPerFrame / 8;
-    _dataFormat.mBytesPerPacket = _dataFormat.mBytesPerFrame * _dataFormat.mFramesPerPacket;
+    _dataFormat = (AudioStreamBasicDescription){
+        .mFormatID = kAudioFormatLinearPCM,
+        .mFormatFlags = formatFlags,
+        .mSampleRate = SAMPLE_RATE,
+        .mBitsPerChannel = 16,
+        .mChannelsPerFrame = 2,
+        .mBytesPerFrame = 4,
+        .mFramesPerPacket = 1,
+        .mBytesPerPacket = 4,
+    };
 }
 
 - (OSStatus)setDataFormatOfConverterAudioUnit;
 {
     AudioUnit converterAudioUnit;
     OSStatus status;
-    status = AUGraphNodeInfo(_graph, _converterNode, NULL, &converterAudioUnit);
+    status = AUGraphNodeInfo(_graph, _converterNode,
+                             NULL, &converterAudioUnit);
     if (status != noErr) {
         return status;
     }
@@ -151,7 +159,8 @@ failed:
     
     AudioUnit converterAudioUnit;
     OSStatus status;
-    status = AUGraphNodeInfo(_graph, _converterNode, NULL, &converterAudioUnit);
+    status = AUGraphNodeInfo(_graph, _converterNode,
+                             NULL, &converterAudioUnit);
     if (status != noErr) {
         return status;
     }
@@ -177,32 +186,45 @@ failed:
         .inputProc = MyRenderer,
         .inputProcRefCon = self,
     };
-    return AUGraphSetNodeInputCallback(_graph, _converterNode, 0, &callback);
+    return AUGraphSetNodeInputCallback(_graph, _converterNode,
+                                       0, &callback);
 }
 
-static OSStatus MyRenderer(void *                           inRefCon,
-                           AudioUnitRenderActionFlags *     ioActionFlags,
-                           const AudioTimeStamp *           inTimeStamp,
-                           UInt32                           inBusNumber,
-                           UInt32                           inNumberFrames,
-                           AudioBufferList *                ioData)
+static OSStatus MyRenderer(
+    void *                       inRefCon,
+    AudioUnitRenderActionFlags * ioActionFlags,
+    const AudioTimeStamp *       inTimeStamp,
+    UInt32                       inBusNumber,
+    UInt32                       inNumberFrames,
+    AudioBufferList *            ioData)
 {
     A440AUGraph * self = inRefCon;
     
     int16_t * sample = ioData->mBuffers[0].mData;
     UInt32 channelsPerFrame = self->_dataFormat.mChannelsPerFrame;
+    
     for (UInt32 i = 0; i < inNumberFrames; i++) {
-        // Divide by four to keep the volume away from the max
-        int16_t sampleValue = A440SineWaveGeneratorNextSample(&self->_sineWaveGenerator) / 4;
-        for (int channel = 0; channel < channelsPerFrame; channel++) {
-            sample[channel] = sampleValue;
-        }
+        FillFrame(self, sample);
         sample += channelsPerFrame;
     }
     
-    ioData->mBuffers[0].mDataByteSize = inNumberFrames*self->_dataFormat.mBytesPerFrame;
+    ioData->mBuffers[0].mDataByteSize =
+        inNumberFrames*self->_dataFormat.mBytesPerFrame;
     
     return noErr;
+}
+
+static void FillFrame(A440AUGraph * self, int16_t * sample)
+{
+    A440SineWaveGenerator * generator = &self->_sineWaveGenerator;
+    int16_t sampleValue =
+        A440SineWaveGeneratorNextSample(generator);
+    // Divide by four to keep the volume away from the max
+    sampleValue /= 4;
+    
+    // Fill two channels
+    sample[0] = sampleValue;
+    sample[1] = sampleValue;
 }
 
 - (BOOL)stop:(NSError **)error;

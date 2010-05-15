@@ -113,7 +113,7 @@ failed:
                           | kAudioFormatFlagsNativeEndian
                           );
     
-    _dataFormat = (AudioStreamBasicDescription){
+    _dataFormat = (AudioStreamBasicDescription) {
         .mFormatID = kAudioFormatLinearPCM,
         .mFormatFlags = formatFlags,
         .mSampleRate = SAMPLE_RATE,
@@ -164,14 +164,14 @@ failed:
     if (status != noErr) {
         return status;
     }
-    
-    UInt32 maxFramesPerSlice = 4096;
-    status = AudioUnitSetProperty(converterAudioUnit,
-                                  kAudioUnitProperty_MaximumFramesPerSlice,
-                                  kAudioUnitScope_Global,
-                                  0,
-                                  &maxFramesPerSlice,
-                                  sizeof(maxFramesPerSlice));
+
+    AudioUnitSetProperty(converterAudioUnit,
+                         kAudioUnitProperty_MaximumFramesPerSlice,
+                         kAudioUnitScope_Global,
+                         0,
+                         &(UInt32) {4096},
+                         sizeof(UInt32));
+
     return status;
     
 #else
